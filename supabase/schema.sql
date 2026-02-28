@@ -14,5 +14,8 @@ create table if not exists public.clients (
 -- Enable RLS
 alter table public.clients enable row level security;
 
--- Allow all operations (for prototype)
+-- Prototype policy: allows all operations without authentication.
+-- Before deploying to production, replace this with user-scoped policies, e.g.:
+--   create policy "Users manage own clients" on public.clients
+--     for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
 create policy "Allow all" on public.clients for all using (true) with check (true);
