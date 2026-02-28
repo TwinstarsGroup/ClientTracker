@@ -36,6 +36,10 @@ export default function AddClientModal({ onClose, onSuccess }: AddClientModalPro
       setError('Name is required.')
       return
     }
+    if (!form.end_date) {
+      setError('End date is required.')
+      return
+    }
     setLoading(true)
     setError(null)
     try {
@@ -46,7 +50,7 @@ export default function AddClientModal({ onClose, onSuccess }: AddClientModalPro
         category: form.category,
         notes: form.notes || null,
         start_date: form.start_date || null,
-        end_date: form.end_date || null,
+        end_date: form.end_date,
       })
       onSuccess()
       onClose()
@@ -154,12 +158,15 @@ export default function AddClientModal({ onClose, onSuccess }: AddClientModalPro
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">End Date</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                End Date <span className="text-red-500">*</span>
+              </label>
               <input
                 type="date"
                 name="end_date"
                 value={form.end_date}
                 onChange={handleChange}
+                required
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>

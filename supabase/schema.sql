@@ -7,15 +7,29 @@ create table if not exists public.clients (
   category text not null check (category in ('Occult', 'Tech', 'Finance', 'Health', 'Other')),
   notes text,
   start_date date,
-  end_date date,
-  created_at timestamptz default now()
+  end_date date not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
 );
+
+-- Trigger function: keep updated_at current on every row update
+create or replace function public.set_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger clients_set_updated_at
+  before update on public.clients
+  for each row execute procedure public.set_updated_at();
 
 -- Enable RLS
 alter table public.clients enable row level security;
 
--- Prototype policy: allows all operations without authentication.
--- Before deploying to production, replace this with user-scoped policies, e.g.:
---   create policy "Users manage own clients" on public.clients
---     for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
-create policy "Allow all" on public.clients for all using (true) with check (true);
+-- Policy: only authenticated users may access clients
+create policy "Authenticated users can manage clients"
+  on public.clients for all
+  using (auth.role() = 'authenticated')
+  with check (auth.role() = 'authenticated');

@@ -8,6 +8,7 @@ export interface Client {
   category: Category
   notes: string | null
   start_date: string | null
-  end_date: string | null
+  end_date: string
   created_at: string
+  updated_at?: string | null
 }

@@ -7,6 +7,7 @@ interface CategorySectionProps {
   category: Category
   clients: Client[]
   onDelete?: (id: string) => void
+  onEdit?: (client: Client) => void
 }
 
 const sectionStyles: Record<Category, { header: string; icon: string; count: string }> = {
@@ -17,7 +18,7 @@ const sectionStyles: Record<Category, { header: string; icon: string; count: str
   Other:   { header: 'border-gray-200 bg-gray-50',      icon: '📁', count: 'bg-gray-200 text-gray-700'     },
 }
 
-export default function CategorySection({ category, clients, onDelete }: CategorySectionProps) {
+export default function CategorySection({ category, clients, onDelete, onEdit }: CategorySectionProps) {
   const styles = sectionStyles[category] ?? sectionStyles.Other
   const sorted = [...clients].sort((a, b) => {
     if (!a.end_date) return 1
@@ -43,7 +44,7 @@ export default function CategorySection({ category, clients, onDelete }: Categor
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {sorted.map((client) => (
-              <ClientCard key={client.id} client={client} onDelete={onDelete} />
+              <ClientCard key={client.id} client={client} onDelete={onDelete} onEdit={onEdit} />
             ))}
           </div>
         )}
