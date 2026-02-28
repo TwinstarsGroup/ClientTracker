@@ -95,7 +95,7 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState<Category | 'All'>('All')
 
   // Auth gate: redirect to /login if Supabase is configured but user is not authenticated or not admin
-  useEffect(() => {
+ /* useEffect(() => {
     if (!isSupabaseConfigured) {
       setAuthChecked(true)
       return
@@ -109,7 +109,11 @@ export default function Home() {
         setAuthChecked(true)
       }
     })
-  }, [router])
+  }, [router])*/
+
+  useEffect(() => {
+  setAuthChecked(true)
+}, [])
 
   const fetchClients = useCallback(async () => {
     setLoading(true)
