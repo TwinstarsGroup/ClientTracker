@@ -94,7 +94,7 @@ export default function Home() {
   const [editingClient, setEditingClient] = useState<Client | null>(null)
   const [activeFilter, setActiveFilter] = useState<Category | 'All'>('All')
 
-  // Auth gate: redirect to /login if Supabase is configured but user is not authenticated
+  // Auth gate: redirect to /login if Supabase is configured but user is not authenticated or not admin
   useEffect(() => {
     if (!isSupabaseConfigured) {
       setAuthChecked(true)
@@ -103,6 +103,8 @@ export default function Home() {
     getUser().then((user) => {
       if (!user) {
         router.replace('/login')
+      } else if (user.email !== 'admin@twinstarsgroup.com') {
+        signOut().catch(() => {}).finally(() => router.replace('/login'))
       } else {
         setAuthChecked(true)
       }
